@@ -1,27 +1,27 @@
 package hue
 
 import (
-	"os"
 	"crypto/md5"
+	"encoding/json"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
-	"log"
-	"fmt"
-	"encoding/json"
-	"io/ioutil"
-	"strings"
 	"net/url"
+	"os"
+	"strings"
 )
 
 var (
-	user_agent = "hue/1.0.2 CFNetwork/609.1.4 Darwin/13.0.0"
+	user_agent          = "hue/1.0.2 CFNetwork/609.1.4 Darwin/13.0.0"
 	create_username_url = "http://%s/api"
 	delete_username_url = "http://%s/api/%s/config/whitelist/%s"
 )
 
 type Api struct {
-	Username string `json:"username"`
+	Username   string `json:"username"`
 	DeviceType string `json:"devicetype"`
 }
 
@@ -30,15 +30,13 @@ type Hue struct {
 }
 
 func NewHue(hostname string) *Hue {
-	hue := Hue{ 
-		hostname
-	}
+	hue := Hue{hostname}
 	return &hue
 }
 
 func (hue *Hue) CreateUsername(username string, device_type string) []map[string]map[string]interface{} {
 	username_md5 := create_md5_hash(username)
-	api_data := Api{ username_md5, device_type }
+	api_data := Api{username_md5, device_type}
 	json_data, _ := json.Marshal(api_data)
 	url := fmt.Sprintf(create_username_url, hue.Hostname)
 	response := http_post(url, string(json_data), "application/json")
@@ -63,7 +61,7 @@ func Discover() string {
 	service := "239.255.255.250:1900"
 	mac_address, err := net.ResolveUDPAddr("udp", service)
 	check_error(err)
-	send, err:= net.DialUDP("udp", nil, mac_address)
+	send, err := net.DialUDP("udp", nil, mac_address)
 	check_error(err)
 	defer send.Close()
 	// Send SSDP Message
@@ -101,7 +99,7 @@ func Discover() string {
 	check_error(err)
 	hostname := ""
 	if strings.Contains(u.Host, ":") {
-	    h := strings.Split(u.Host, ":")
+		h := strings.Split(u.Host, ":")
 		hostname = h[0]
 	} else {
 		hostname = u.Host
