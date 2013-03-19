@@ -58,9 +58,9 @@ func (hue *Hue) GetConfig() {
 
 func Discover() string {
 	service := "239.255.255.250:1900"
-	mac_address, err := net.ResolveUDPAddr("udp", service)
+	mac_address, err := net.ResolveUDPAddr("udp4", service)
 	check_error(err)
-	send, err := net.DialUDP("udp", nil, mac_address)
+	send, err := net.DialUDP("udp4", nil, mac_address)
 	check_error(err)
 	defer send.Close()
 	// Send SSDP Message
@@ -69,7 +69,7 @@ func Discover() string {
 	check_error(error)
 	fmt.Println("Searching for Philip Hue Hub ...")
 	// Listen for SSDP/HTTP NOTIFY over UDP
-	listen, err := net.ListenMulticastUDP("udp", nil, mac_address)
+	listen, err := net.ListenMulticastUDP("udp4", nil, mac_address)
 	check_error(err)
 	defer listen.Close()
 	description_url := ""
