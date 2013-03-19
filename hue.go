@@ -67,7 +67,7 @@ func Discover() string {
 	ssdp_discovery_message := []byte("M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: ssdp:discover\r\nMX: 10\r\nST: \"ssdp:all\"\r\n\r\n")
 	_, error := send.Write(ssdp_discovery_message)
 	check_error(error)
-	fmt.Println("Searching for Philip Hue Hub ...")
+	fmt.Println("Searching for Philip Hue Hub (Could take up to 30 secs)...")
 	// Listen for SSDP/HTTP NOTIFY over UDP
 	listen, err := net.ListenMulticastUDP("udp4", nil, mac_address)
 	check_error(err)
