@@ -17,11 +17,22 @@ var (
 	user_agent          = "hue/1.0.2 CFNetwork/609.1.4 Darwin/13.0.0"
 	create_username_url = "http://%s/api"
 	delete_username_url = "http://%s/api/%s/config/whitelist/%s"
+	portal_url          = "http://www.meethue.com/api/nupnp"
 )
 
 type Api struct {
 	Username   string `json:"username"`
 	DeviceType string `json:"devicetype"`
+}
+
+type PortalApiResponse struct {
+	portals [] Portal
+}
+
+type Portal struct {
+	Id string `json:"id"`
+	InternalIpAddress string `json:"internalipaddress"`
+	MacAddress string `json:"macaddress"`
 }
 
 type Hue struct {
@@ -54,6 +65,13 @@ func (hue *Hue) DeleteUsername(username string) []map[string]interface{} {
 
 func (hue *Hue) GetConfig() {
 	//TODO: To be implemented very soon.
+}
+
+func GetPortal() []Portal {
+	response := http_get(portal_url)
+	var api_response []Portal
+	json.Unmarshal(response, &api_response)
+	return api_response
 }
 
 func Discover() string {
