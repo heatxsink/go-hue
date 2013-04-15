@@ -30,9 +30,17 @@ func TestGetConfiguration(t *testing.T) {
 		p := portal[i]
 		h := hue.NewHue(p.InternalIpAddress)
 		c := h.GetConfiguration(username_api_key)
-		fmt.Printf("\tProxyPort: %d\n", c.ProxyPort)
-		fmt.Printf("\tUtc: %s\n", c.Utc)
 		fmt.Printf("\tName: %s\n", c.Name)
+		fmt.Printf("\tUtc: %s\n", c.Utc)
+		fmt.Printf("\tSwVersion: %s\n", c.SwVersion)
+		fmt.Printf("\tProxyAddress: %s\n", c.ProxyAddress)
+		fmt.Printf("\tProxyPort: %d\n", c.ProxyPort)
+		fmt.Printf("\tMac: %s\n", c.Mac)
+		fmt.Printf("\tLinkButton: %t\n", c.LinkButton)
+		fmt.Printf("\tIpAddress: %s\n", c.IpAddress)
+		fmt.Printf("\tNetMask: %s\n", c.NetMask)
+		fmt.Printf("\tGateway: %s\n", c.Gateway)
+		fmt.Printf("\tDhcp: %t\n", c.Dhcp)
 		fmt.Printf("\tSwUpdate: \n")
 		fmt.Printf("\t\tUpdateState: %d\n", c.SwUpdate.UpdateState)
 		fmt.Printf("\t\tUrl: %s\n", c.SwUpdate.Url)
@@ -45,36 +53,7 @@ func TestGetConfiguration(t *testing.T) {
 			fmt.Printf("\t\t\tCreateDate: %s\n", c.Whitelist[j].CreateDate)
 			fmt.Printf("\t\t\tName: %s\n", c.Whitelist[j].Name)
 		}
-		fmt.Printf("\tSwVersion: %s\n", c.SwVersion)
-		fmt.Printf("\tProxyAddress: %s\n", c.ProxyAddress)
-		fmt.Printf("\tMac: %s\n", c.Mac)
-		fmt.Printf("\tLinkButton: %t\n", c.LinkButton)
-		fmt.Printf("\tIpAddress: %s\n", c.IpAddress)
-		fmt.Printf("\tNetMask: %s\n", c.NetMask)
-		fmt.Printf("\tGateway: %s\n", c.Gateway)
-		fmt.Printf("\tDhcp: %t\n", c.Dhcp)
 		t.Log(p.InternalIpAddress)
 	}
 }
 
-/*
-func TestCreateUsername(t *testing.T) {
-	hostname := "10.0.16.16"
-	username := ""
-	device_type := ""
-	h := hue.NewHue(hostname)
-	response := h.CreateUsername(username, device_type)
-	message := fmt.Sprintf("Verified Api Key (Username MD5 hashed): %s\n", response[0]["success"]["username"])
-	t.Log(message)
-}
-
-func TestDeleteUsername(t *testing.T) {
-	hostname := "10.0.16.16"
-	username := ""
-	device_type := ""
-	h := hue.NewHue(hostname)
-	response := h.CreateUsername(username, device_type)
-	message := fmt.Sprintf("Verified Api Key (Username MD5 hashed): %s\n", response[0]["success"]["username"])
-	t.Log(message)
-}
-*/
