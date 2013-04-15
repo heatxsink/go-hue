@@ -17,22 +17,48 @@ var (
 	user_agent          = "hue/1.0.2 CFNetwork/609.1.4 Darwin/13.0.0"
 	create_username_url = "http://%s/api"
 	delete_username_url = "http://%s/api/%s/config/whitelist/%s"
+	configuration_url   = "http://%s/api/%s/config"
 	portal_url          = "http://www.meethue.com/api/nupnp"
 )
 
-type Api struct {
+type User struct {
 	Username   string `json:"username"`
 	DeviceType string `json:"devicetype"`
-}
-
-type PortalApiResponse struct {
-	portals [] Portal
 }
 
 type Portal struct {
 	Id string `json:"id"`
 	InternalIpAddress string `json:"internalipaddress"`
 	MacAddress string `json:"macaddress"`
+}
+
+type SwUpdate struct {
+	UpdateState int `json:updatestate`
+	Url string `json:url`
+	Text string `json:text`
+	Notify bool `json:notify`
+}
+
+type Whitelist struct {
+	LastUseDate string `json:"last use date"`
+	CreateDate string `json:"create date"`
+	Name string `json:name`
+}
+
+type Configuration struct {
+	ProxyPort int `json:proxyport`
+	Utc string `json:utc`
+	Name string `json:name`
+	SwUpdate SwUpdate `json:swupdate`
+	Whitelist map[string]Whitelist `json:whitelist`
+	SwVersion string `json:swversion`
+	ProxyAddress string `json:proxyaddress`
+	Mac string `json:mac`
+	LinkButton bool `json:linkbutton`
+	IpAddress string `json:ipaddress`
+	NetMask string `json:netmask`
+	Gateway string `json:gateway`
+	Dhcp bool `json:dhcp`
 }
 
 type Hue struct {
@@ -44,9 +70,9 @@ func NewHue(hostname string) *Hue {
 	return &hue
 }
 
-func (hue *Hue) CreateUsername(username string, device_type string) []map[string]map[string]interface{} {
+func (hue *Hue) CreateUser(username string, device_type string) []map[string]map[string]interface{} {
 	username_md5 := create_md5_hash(username)
-	api_data := Api{username_md5, device_type}
+	api_data := User{username_md5, device_type}
 	json_data, _ := json.Marshal(api_data)
 	url := fmt.Sprintf(create_username_url, hue.Hostname)
 	response := http_post(url, string(json_data), "application/json")
@@ -55,7 +81,7 @@ func (hue *Hue) CreateUsername(username string, device_type string) []map[string
 	return api_response
 }
 
-func (hue *Hue) DeleteUsername(username string) []map[string]interface{} {
+func (hue *Hue) DeleteUser(username string) []map[string]interface{} {
 	url := fmt.Sprintf(delete_username_url, hue.Hostname, username, username)
 	response := http_delete(url)
 	var api_response []map[string]interface{}
@@ -63,8 +89,12 @@ func (hue *Hue) DeleteUsername(username string) []map[string]interface{} {
 	return api_response
 }
 
-func (hue *Hue) GetConfig() {
-	//TODO: To be implemented very soon.
+func (hue *Hue) GetConfiguration(username string) Configuration {
+	url := fmt.Sprintf(configuration_url, hue.Hostname, username)
+	response := http_get(url)
+	var api_response Configuration
+	json.Unmarshal(response, &api_response)
+	return api_response
 }
 
 func GetPortal() []Portal {
