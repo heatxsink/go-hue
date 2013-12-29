@@ -104,7 +104,7 @@ func groupV1(w http.ResponseWriter, req *http.Request) {
 	api_response := ApiResponse{ Result: true, Message: "", StatusCode: http.StatusOK }
 	req.ParseForm()
 	query_params := req.Form
-    if req.Method == "GET" {
+	if req.Method == "GET" {
 		id, id_exists := query_params["id"]
 		//name, name_exists := query_params["name"]
 		state, state_exists := query_params["state"]
