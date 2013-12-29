@@ -1,4 +1,7 @@
 go-hue
 ======
+golang api wrapper for interacting with philips hue lights. will keep you posted when i start using this everyday. - nick
 
-go api wrapper for interacting with philips hue ... this is work in progress ... sit tight
+setup
+-----
+	$ make test

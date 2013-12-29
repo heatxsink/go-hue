@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"github.com/heatxsink/go-hue"
+	"../src/portal"
+	"../src/configuration"
 )
 
 func main() {
-	hub_hostname := hue.Discover()
+	hub_hostname := portal.Discover()
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Please press the link button on your hub, then press [enter] to continue.")
 	reader.ReadLine()
@@ -21,7 +22,7 @@ func main() {
 	data1, _, _ := reader.ReadLine()
 	device_type := string(data1)
 	// lets finally create a username for the api
-	h := hue.NewHue(hub_hostname)
-	response := h.CreateUsername(username, device_type)
+	c := configuration.NewConfiguration(hub_hostname)
+	response := c.CreateUsername(username, device_type)
 	fmt.Printf("Verified Api Key (Username MD5 hashed): %s\n", response[0]["success"]["username"])
 }

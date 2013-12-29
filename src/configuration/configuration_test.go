@@ -1,34 +1,45 @@
-package hue
+package configuration
 
 import (
 	"testing"
 	"fmt"
-	"github.com/heatxsink/go-hue"
+	"../portal"
 )
 
 var (
-	username = "testing"
-	device_type = "testing desktop"
 	username_api_key = "ae2b1fca515949e5d54fb22b8ed95575"
 )
 
-func TestGetPortal(t *testing.T) {
-	portal := hue.GetPortal()
-	fmt.Println("hue.GetPortal()")
-	for i := range portal {
-		fmt.Printf("\tId:                  %s\n", portal[i].Id)
-		fmt.Printf("\tInternal Ip Address: %s\n", portal[i].InternalIpAddress)
-		fmt.Printf("\tMac Address:         %s\n", portal[i].MacAddress)
-		t.Log(portal[i].InternalIpAddress)
-	}
+func TestCreateUser(t *testing.T) {
+	fmt.Println("configuration.CreateUser()")
+	portal := portal.GetPortal()
+	ccc := NewConfiguration(portal[0].InternalIpAddress)
+	response := ccc.CreateUser("go-hue-user", "go-lang-test")
+	fmt.Println("\t", response[0])
+}
+
+func TestDeleteUser(t *testing.T) {
+	fmt.Println("configuration.DeleteUser()")
+	portal := portal.GetPortal()
+	ccc := NewConfiguration(portal[0].InternalIpAddress)
+	response := ccc.DeleteUser("go-hue-user")
+	fmt.Println("\t", response[0])
+}
+
+func TestGetFullState(t *testing.T) {
+	fmt.Println("configuration.GetFullState()")
+	portal := portal.GetPortal()
+	ccc := NewConfiguration(portal[0].InternalIpAddress)
+	response := ccc.GetFullState(username_api_key)
+	fmt.Println(response)
 }
 
 func TestGetConfiguration(t *testing.T) {
-	portal := hue.GetPortal()
-	fmt.Println("h.GetConfiguration(username_api_key)")
+	portal := portal.GetPortal()
+	fmt.Println("configuration.GetConfiguration()")
 	for i := range portal {
 		p := portal[i]
-		h := hue.NewHue(p.InternalIpAddress)
+		h := NewConfiguration(p.InternalIpAddress)
 		c := h.GetConfiguration(username_api_key)
 		fmt.Printf("\tName:         %s\n", c.Name)
 		fmt.Printf("\tUtc:          %s\n", c.Utc)
@@ -48,7 +59,7 @@ func TestGetConfiguration(t *testing.T) {
 		fmt.Printf("\t\tNotify:      %t\n", c.SwUpdate.Notify)
 		fmt.Printf("\tWhitelist:\n")
 		for j := range c.Whitelist {
-			fmt.Printf("\t\t%s\n", j)
+			fmt.Printf("\t\tKey: %s\n", j)
 			fmt.Printf("\t\t\tLastUseDate: %s\n", c.Whitelist[j].LastUseDate)
 			fmt.Printf("\t\t\tCreateDate:  %s\n", c.Whitelist[j].CreateDate)
 			fmt.Printf("\t\t\tName:        %s\n", c.Whitelist[j].Name)
