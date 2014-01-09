@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/fcgi"
-	"strconv"
+	//"strconv"
 	"net"
 	"fmt"
 	"github.com/golang/glog"
@@ -29,7 +29,7 @@ type ApiResponse struct {
 }
 
 func group_name_presets(name string) int {
-	return_value := 4
+	return_value := -1
 	if name == "all" {
 		return_value = 0
 	} else if name == "office" {
@@ -105,12 +105,11 @@ func groupV1(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	query_params := req.Form
 	if req.Method == "GET" {
-		id, id_exists := query_params["id"]
-		//name, name_exists := query_params["name"]
+		name, name_exists := query_params["name"]
 		state, state_exists := query_params["state"]
 		
-		if id_exists {
-			group_id, _ := strconv.Atoi(id[0])
+		if name_exists {
+			group_id := group_name_presets(name[0])
 			if state_exists {
 				gg := groups.NewGroup(hue_hostname, username_api_key)
 				group_state := light_state_presets(state[0])
@@ -142,6 +141,19 @@ func statusV1(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(http.StatusText(http.StatusTeapot)))
 }
 
+func user_interfaceV1(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "./www/index.html")
+}
+
+func static_root(w http.ResponseWriter, req *http.Request) {
+	if string(req.URL.Path[1:7]) == "static" {
+		path := fmt.Sprintf("./www/%s", req.URL.Path[1:])
+		http.ServeFile(w, req, path)
+	} else {
+		root(w, req)
+	}
+}
+
 func root(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("content-type", "text/plain")
 	w.WriteHeader(http.StatusNotFound)
@@ -159,7 +171,8 @@ func web_start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/1/group", groupV1)
 	mux.HandleFunc("/api/1/status", statusV1)
-	mux.HandleFunc("/", root)
+	mux.HandleFunc("/ui", user_interfaceV1)
+	mux.HandleFunc("/", static_root)
 	if local_web_server_flag {
 		hostname := fmt.Sprintf(":%d", web_bind_port)
 		start_message := fmt.Sprintf("Starting local hued-web on %s\n", hostname)
