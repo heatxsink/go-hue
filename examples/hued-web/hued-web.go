@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/fcgi"
-	//"strconv"
 	"net"
 	"fmt"
 	"github.com/golang/glog"
-	"../src/lights"
-	"../src/portal"
-	"../src/groups"
+	"../../src/lights"
+	"../../src/portal"
+	"../../src/groups"
 )
 
 var (
@@ -146,7 +145,9 @@ func user_interfaceV1(w http.ResponseWriter, req *http.Request) {
 }
 
 func static_root(w http.ResponseWriter, req *http.Request) {
-	if string(req.URL.Path[1:7]) == "static" {
+	if len(req.URL.Path) == 1 {
+		root(w, req)
+	} else if string(req.URL.Path[1:7]) == "static" {
 		path := fmt.Sprintf("./www/%s", req.URL.Path[1:])
 		http.ServeFile(w, req, path)
 	} else {
