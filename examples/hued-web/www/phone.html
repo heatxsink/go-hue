@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Lights</title>
+		<!-- Sets initial viewport load and disables zooming  -->
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+		<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!-- Set a shorter title for iOS6 devices when saved to home screen -->
+		<meta name="apple-mobile-web-app-title" content="Lights">
+		<!-- Set Apple icons for when prototype is saved to home screen -->
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ratchet/1.0/touch-icons/apple-touch-icon-114x114.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ratchet/1.0/touch-icons/apple-touch-icon-72x72.png">
+		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/static/ratchet/1.0/touch-icons/apple-touch-icon-57x57.png">
+		<!-- Include the compiled Ratchet CSS -->
+		<link rel="stylesheet" href="/static/ratchet/1.0/ratchet.css">
+		<!-- Include the compiled Ratchet JS -->
+		<script src="/static/ratchet/1.0/ratchet.js"></script>
+	</head>
+<body>
+
+<div id="group-popover" class="popover">
+	<header class="popover-header">
+		<h3 class="title">Groups</h3>
+	</header>
+	<a class="button-block upstairs">Upstairs</a>
+	<a class="button-block all">All</a>
+	<a class="button-block office">Office</a>
+	<a class="button-block bedroom">Bedroom</a>
+	<a class="button-block living-room">Living Room</a>
+</div>
+
+<header class="bar-title">
+	<a class="button light-group-button" href="#group-popover">All</a>
+	<h1 class="title">Lights</h1>
+</header>
+
+<div class="bar-standard bar-header-secondary">
+	<a class="button-negative button-block off">Off</a>
+</div>
+
+<div class="content">
+	
+	<ul class="segmented-controller">
+		<li class="active">
+			<a  class="red">Red</a>
+		</li>
+		<li>
+			<a  class="orange">Orange</a>
+		</li>
+		<li>
+			<a  class="green">Green</a>
+		</li>
+		<li>
+			<a  class="blue">Blue</a>
+		</li>
+	</ul>
+	
+	<ul class="list">
+		<li class="energize">
+			<strong>Energize</strong>
+		</li>
+		<li class="concentrate">
+			<strong>Concentrate</strong>
+		</li>
+
+		<li class="relax">
+			<strong>Relax</strong>
+		</li>
+		
+		<li class="reading">
+			<strong>Reading</strong>
+		</li>
+
+		<li class="candle-light">
+			<strong>Candle Light</strong>
+		</li>
+
+		<li class="snow">
+			<strong>Snow</strong>
+		</li>
+
+		<li class="white">
+			<strong>White</strong>
+		</li>
+
+		<li class="virgin-america">
+			<strong>Virgin America</strong>
+		</li>
+				
+		<li class="deep-sea">
+			<strong>Deep Sea</strong>
+		</li>
+		
+		<li class="movie-mode">
+			<strong>Movie Mode</strong>
+		</li>
+		
+	</ul>
+</div>
+<script type="text/javascript" src="/static/jquery/1.11.0.js"></script>
+<script type="text/javascript">
+function init_lights() {
+	var group_object = JSON.parse(window.localStorage['selected_light_group']);
+	if (group_object == undefined) {
+		$("light-group-button").text(group_object.name);
+	} else {
+		var obj = {
+			slug : "all",
+			name : "All"
+		}
+	}
+}
+
+function select_group(obj) {
+	//console.log("Select Group: ", obj);
+	$(".light-group-button").text(obj.name);
+	window.localStorage['selected_light_group'] = JSON.stringify(obj);
+}
+
+function change_color(color) {
+	if(color != "") {
+		var group_object = JSON.parse(window.localStorage['selected_light_group']);
+		//console.log("Group from cache: ", group_object);
+		var url = "/api/1/group?name=" + group_object.slug + "&state=" + color;
+		//console.log("Generated Url: ", url);
+		$.get(url);
+	}
+}
+
+$(".off").click(function(){
+	change_color("off");
+});
+
+$(".red").click(function(){
+	change_color("red");
+});
+
+$(".blue").click(function(){
+	change_color("blue");
+});
+
+$(".candle-light").click(function(){
+	change_color("candle-light");
+});
+
+$(".energize").click(function(){
+	change_color("energize");
+});
+
+$(".relax").click(function(){
+	change_color("relax");
+});
+
+$(".reading").click(function(){
+	change_color("reading");
+});
+
+$(".concentrate").click(function(){
+	change_color("concentrate");
+});
+
+$(".virgin-america").click(function(){
+	change_color("virgin-america");
+});
+
+$(".white").click(function(){
+	change_color("white");
+});
+
+$(".snow").click(function(){
+	change_color("snow");
+});
+
+$(".orange").click(function(){
+	change_color("orange");
+});
+
+$(".deep-sea").click(function(){
+	change_color("deep-sea");
+});
+
+
+$(".green").click(function(){
+	change_color("green");
+});
+
+$(".movie-mode").click(function(){
+	change_color("movie-mode");
+});
+
+$(".all").click(function(){
+	var obj = {
+		slug : "all",
+		name : "All"
+	};
+	select_group(obj);
+});
+
+$(".office").click(function(){
+	var obj = {
+		slug : "office",
+		name : "Office"
+	};
+	select_group(obj);
+});
+
+$(".bedroom").click(function(){
+	var obj = {
+		slug : "bedroom",
+		name : "Bedroom"
+	};
+	select_group(obj);
+});
+
+$(".living-room").click(function(){
+	var obj = {
+		slug : "living-room",
+		name : "Living Room"
+	};
+	select_group(obj);
+});
+
+$(".upstairs").click(function(){
+	var obj = {
+		slug : "upstairs",
+		name : "Upstairs"
+	};
+	select_group(obj);
+});
+
+init_lights();
+</script>
+</body>
+</html>

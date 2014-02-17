@@ -140,8 +140,12 @@ func statusV1(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(http.StatusText(http.StatusTeapot)))
 }
 
-func user_interfaceV1(w http.ResponseWriter, req *http.Request) {
-	http.ServeFile(w, req, "./www/index.html")
+func user_interface_phoneV1(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "./www/phone.html")
+}
+
+func user_interface_tabletV1(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "./www/tablet.html")
 }
 
 func static_root(w http.ResponseWriter, req *http.Request) {
@@ -172,7 +176,8 @@ func web_start() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/1/group", groupV1)
 	mux.HandleFunc("/api/1/status", statusV1)
-	mux.HandleFunc("/ui", user_interfaceV1)
+	mux.HandleFunc("/tablet", user_interface_tabletV1)
+	mux.HandleFunc("/phone", user_interface_phoneV1)
 	mux.HandleFunc("/", static_root)
 	if local_web_server_flag {
 		hostname := fmt.Sprintf(":%d", web_bind_port)

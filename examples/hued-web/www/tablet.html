@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>light controller mk i</title>
+		<title>lights mk II</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="/static/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 	</head>
@@ -93,7 +93,7 @@
 				</div>
 			</div>
 		</div>
-		<script src="https://code.jquery.com/jquery.js"></script>
+		<script src="/static/jquery/1.11.0.js"></script>
 		<script src="/static/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			var SELECTED_GROUP = "";
@@ -123,7 +123,7 @@
 
 			function change_color() {
 				if(SELECTED_GROUP != "" && SELECTED_COLOR != "") {
-					var url = "http://deathstar.local:9000/api/1/group?name=" + SELECTED_GROUP + "&state=" + SELECTED_COLOR;
+					var url = "/api/1/group?name=" + SELECTED_GROUP + "&state=" + SELECTED_COLOR;
 					$.get(url);
 				}
 			}
@@ -184,8 +184,6 @@
 					select_color("concentrate");
 				});
 
-
-
 				$(".virgin-america").click(function(){
 					select_color("virgin-america");
 				});
@@ -201,7 +199,6 @@
 				$(".orange").click(function(){
 					select_color("orange");
 				});
-
 
 				$(".deep-sea").click(function(){
 					select_color("deep-sea");
