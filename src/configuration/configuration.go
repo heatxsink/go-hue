@@ -65,8 +65,8 @@ func (cc *Configuration) CreateUser(username string, device_type string) []util.
 	return api_response
 }
 
-func (cc *Configuration) DeleteUser(username string) []util.ApiResponse {
-	url := fmt.Sprintf(delete_username_url, cc.Hostname, username, username)
+func (cc *Configuration) DeleteUser(username string, delete_this_username string) []util.ApiResponse {
+	url := fmt.Sprintf(delete_username_url, cc.Hostname, username, delete_this_username)
 	response := util.HttpDelete(url)
 	var api_response []util.ApiResponse
 	json.Unmarshal(response, &api_response)

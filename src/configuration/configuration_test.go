@@ -29,7 +29,7 @@ func TestDeleteUser(t *testing.T) {
 	fmt.Println("configuration.DeleteUser()")
 	portal := portal.GetPortal()
 	ccc := NewConfiguration(portal[0].InternalIpAddress)
-	response := ccc.DeleteUser("go-hue-user")
+	response := ccc.DeleteUser(username_api_key, "ae2b1fca515949e5d54fb22b8ed95575")
 	fmt.Println("\t", response[0])
 }
 
