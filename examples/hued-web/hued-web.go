@@ -10,15 +10,18 @@ import (
 	"../../src/lights"
 	"../../src/portal"
 	"../../src/groups"
+	"../../src/key"
+	"flag"
 )
 
 var (
+	username_api_key_filename = ""
+	username_api_key = ""
 	hostname = ""
 	hue_hostname = ""
 	local_web_server_flag = true
 	web_bind_address= "127.0.0.1"
 	web_bind_port = 9000
-	username_api_key = "ae2b1fca515949e5d54fb22b8ed95575"
 )
 
 type ApiResponse struct {
@@ -58,7 +61,7 @@ func light_state_presets(name string) lights.State {
 	orange := lights.State { On: true, Hue: 4868, Effect: "none", Bri: 254, Sat: 252, Ct: 500, Xy: []float32{0.6225, 0.3594}, Alert: "none", TransitionTime: 4 }
 	deep_sea := lights.State { On: true, Hue: 65527, Effect: "none", Bri: 253, Sat: 253, Ct: 500, Xy: []float32{0.6736, 0.3221}, Alert: "none", TransitionTime: 4 }
 	green := lights.State { On: true, Hue: 25654, Effect: "none", Bri: 254, Sat: 253, Ct: 290, Xy: []float32{0.4083, 0.5162}, Alert: "none", TransitionTime: 4 }
-	snow := lights.State { On: true, Hue: 34258, Effect: "none", Bri: 254, Sat: 176, Ct: 181, Xy: []float32{0.3327, 0.3413}, Alert: "none", TransitionTime: 4 }	
+	snow := lights.State { On: true, Hue: 34258, Effect: "none", Bri: 254, Sat: 176, Ct: 181, Xy: []float32{0.3327, 0.3413}, Alert: "none", TransitionTime: 4 }
 	movie_mode := lights.State { On: true, Hue: 65527, Effect: "none", Bri: 51, Sat: 253, Ct: 500, Xy: []float32{0.6736, 0.3221}, Alert: "none", TransitionTime: 4 }
 	// default ...
 	return_value := on
@@ -106,7 +109,7 @@ func groupV1(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		name, name_exists := query_params["name"]
 		state, state_exists := query_params["state"]
-		
+
 		if name_exists {
 			group_id := group_name_presets(name[0])
 			if state_exists {
@@ -199,7 +202,14 @@ func web_start() {
 	}
 }
 
+func init() {
+	flag.StringVar(&username_api_key_filename, "conf", "", "The conf file that has the hue username api key in it.")
+	flag.Parse()
+}
+
 func main() {
+	k := key.New(username_api_key_filename)
+	username_api_key = k.Username
 	portal := portal.GetPortal()
 	hue_hostname = portal[0].InternalIpAddress
 	web_start()

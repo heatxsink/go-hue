@@ -23,3 +23,5 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+conf/username_api_key.conf

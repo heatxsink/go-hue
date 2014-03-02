@@ -5,16 +5,22 @@ import (
 	"time"
 	"testing"
 	"../portal"
+	"../key"
 )
 
 var (
-	username_api_key = "ae2b1fca515949e5d54fb22b8ed95575"
+	username_api_key_filename = "../../conf/username_api_key.conf"
+	username_api_key = ""
 	transition_time = uint16(4)
 	sleep_seconds = 4
 	sleep_ms = 100
-	//test_lights = []int { 1, 2, 3, 4, 5, 6, 8 }
 	test_lights = []int { 1, 2, 3, 4 }
 )
+
+func init() {
+	k := key.New(username_api_key_filename)
+	username_api_key = k.Username
+}
 
 func print_light_state(light Light) {
 	fmt.Println("\tLight: ")
@@ -128,7 +134,7 @@ func TestSetLightState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
+
 	// lets turn them off!
 	fmt.Println("\n\nOFF ...")
 	off := State { On: false, Hue: 34495, Effect: "none", Bri: 203, Sat: 232, Ct: 155, Xy: []float32{0.3151, 0.3252}, Alert: "none", TransitionTime: 4 }
@@ -138,7 +144,7 @@ func TestSetLightState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
+
 	// lets RESTORE
 	fmt.Println("\n\nRESTORING original state ...")
 	for _, llll := range lights_before {

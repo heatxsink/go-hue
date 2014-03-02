@@ -6,15 +6,22 @@ import (
 	"time"
 	"../portal"
 	"../lights"
+	"../key"
 )
 
 var (
-	username_api_key = "ae2b1fca515949e5d54fb22b8ed95575"
+	username_api_key_filename = "../../conf/username_api_key.conf"
+	username_api_key = ""
 	transition_time = uint16(4)
 	sleep_seconds = 4
 	sleep_ms = 100
 	test_groups = []int { 0, 1, 2, 3, 4 }
 )
+
+func init() {
+	k := key.New(username_api_key_filename)
+	username_api_key = k.Username
+}
 
 /*
 func TestCreateGroup(t *testing.T) {
@@ -140,7 +147,7 @@ func TestSetGroupState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
+
 	// lets turn them off!
 	fmt.Println("\n\nOFF ...")
 	off := lights.State { On: false }
@@ -150,7 +157,7 @@ func TestSetGroupState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
+
 	// lets turn them on!
 	fmt.Println("\n\nON ...")
 	on := lights.State { On: true }
@@ -160,8 +167,8 @@ func TestSetGroupState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
-	
+
+
 	// lets turn them blue!
 	fmt.Println("\n\nBLUE ...")
 	blue := lights.State { On: true, Hue: 46573, Effect: "none", Bri: 254, Sat: 251, Ct: 500, Xy: []float32{0.1754, 0.0556}, Alert: "none", TransitionTime: transition_time }
@@ -181,7 +188,7 @@ func TestSetGroupState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	
+
 	// lets RESTORE
 	fmt.Println("\n\nRESTORING original state ...")
 	for _, gggg := range groups_before {

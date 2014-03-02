@@ -4,11 +4,18 @@ import (
 	"fmt"
 	"../src/portal"
 	"../src/lights"
+	"../src/key"
 )
 
 var (
-	username_api_key = "ae2b1fca515949e5d54fb22b8ed95575"
+	username_api_key_filename = "../conf/username_api_key.conf"
+	username_api_key = ""
 )
+
+func init() {
+	k := key.New(username_api_key_filename)
+	username_api_key = k.Username
+}
 
 func print_light(light lights.Light) {
 	fmt.Println("\tLight: ")
