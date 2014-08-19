@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"os"
 )
 
 var (
@@ -29,6 +30,13 @@ func CheckError(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func FileExists(path string) (bool, error) {
+	_, error := os.Stat(path)
+	if error == nil { return true, nil }
+	if os.IsNotExist(error) { return false, nil }
+	return false, error
 }
 
 func CreateMd5Hash(data string) string {

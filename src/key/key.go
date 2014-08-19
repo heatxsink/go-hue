@@ -1,11 +1,11 @@
 package key
 
 import (
-	"os"
 	"io/ioutil"
 	"log"
 	"fmt"
-	"strings"
+	"encoding/json"
+	"../util"
 )
 
 var (
@@ -20,18 +20,11 @@ func New(filename string) *Key {
 }
 
 type Key struct {
-	Username string
-}
-
-func FileExists(path string) (bool, error) {
-	_, error := os.Stat(path)
-	if error == nil { return true, nil }
-	if os.IsNotExist(error) { return false, nil }
-	return false, error
+	Username string `json:"username"`
 }
 
 func LoadFromFile(filename string) *Key {
-	exists, _ := FileExists(filename)
+	exists, _ := util.FileExists(filename)
 	if !exists {
 		message := fmt.Sprintf("Filename %s does not exist.", filename)
 		log.Fatal(message)
@@ -41,9 +34,7 @@ func LoadFromFile(filename string) *Key {
 		log.Fatal(error_msg)
 	}
 	var key Key
-	tokens := strings.Split(string(content), "\n")
-	username_api_key := strings.TrimRight(tokens[0], "\n")
-	key.Username = username_api_key
+	json.Unmarshal(content, &key)
 	return &key
 }
 
