@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"encoding/json"
-	"../util"
+	"github.com/heatxsink/util"
 )
 
 var (

@@ -3,8 +3,8 @@ package configuration
 import (
 	"testing"
 	"fmt"
-	"../portal"
-	"../key"
+	"github.com/heatxsink/go-hue/src/portal"
+	"github.com/heatxsink/go-hue/src/key"
 )
 
 var (

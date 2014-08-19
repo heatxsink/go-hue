@@ -4,9 +4,9 @@ import (
 	"testing"
 	"fmt"
 	"time"
-	"../portal"
-	"../lights"
-	"../key"
+	"github.com/heatxsink/go-hue/src/portal"
+	"github.com/heatxsink/go-hue/src/lights"
+	"github.com/heatxsink/go-hue/src/key"
 )
 
 var (

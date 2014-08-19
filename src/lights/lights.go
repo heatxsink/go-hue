@@ -3,8 +3,8 @@ package lights
 import (
 	"encoding/json"
 	"fmt"
-	"../util"
 	"strconv"
+	"github.com/heatxsink/go-hue/src/util"
 )
 
 var (

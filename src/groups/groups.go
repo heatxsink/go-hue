@@ -2,8 +2,8 @@ package groups
 
 import (
 	"fmt"
-	"../util"
-	"../lights"
+	"github.com/heatxsink/go-hue/src/lights"
+	"github.com/heatxsink/go-hue/src/util"
 	"strconv"
 	"encoding/json"
 )

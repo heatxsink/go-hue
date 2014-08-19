@@ -3,7 +3,7 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
-	"../util"
+	"github.com/heatxsink/go-hue/src/util"
 )
 
 var (
