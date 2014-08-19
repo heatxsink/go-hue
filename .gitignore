@@ -2,6 +2,7 @@
 *.o
 *.a
 *.so
+*.conf
 
 # Folders
 _obj
@@ -9,7 +10,6 @@ _test
 lib
 bin
 log
-conf
 
 # Architecture specific extensions/prefixes
 *.[568vq]
