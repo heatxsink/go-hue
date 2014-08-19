@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"flag"
 	"fmt"
 	"../src/portal"
 	"../src/lights"
@@ -8,14 +10,8 @@ import (
 )
 
 var (
-	username_api_key_filename = "../conf/username_api_key.conf"
-	username_api_key = ""
+	config_filename string = ""
 )
-
-func init() {
-	k := key.New(username_api_key_filename)
-	username_api_key = k.Username
-}
 
 func print_light(light lights.Light) {
 	fmt.Println("\tLight: ")
@@ -36,27 +32,30 @@ func print_light(light lights.Light) {
 	fmt.Println("\t\t\tColorMode:  ", light.State.ColorMode)
 }
 
-func print_light_state(light lights.State) {
-	if light.TransitionTime == 0 {
-		light.TransitionTime = 4
-	}
-	light_struct := fmt.Sprintf("lights.State { On: %t, Hue: %d, Effect: \"%s\", Bri: %d, Sat: %d, Ct: %d, Xy: []float32{%g, %g}, Alert: \"%s\", TransitionTime: %d }", light.On, light.Hue, light.Effect, light.Bri, light.Sat, light.Ct, light.Xy[0], light.Xy[1], light.Alert, light.TransitionTime)
-	fmt.Println(light_struct)
+func usage() {
+	fmt.Fprintf(os.Stderr, "usage: get-light-state -config=[string]\n")
+	flag.PrintDefaults()
+	os.Exit(2)
+}
+
+func init() {
+	flag.StringVar(&config_filename, "config", "", "Config filename.")
+	flag.Parse()
+	flag.Usage = usage
 }
 
 func main() {
-	struct_mode := true
-	portal := portal.GetPortal()
-	ll := lights.NewLights(portal[0].InternalIpAddress, username_api_key)
-	lights := ll.GetAllLights()
-	fmt.Println("All Lights: ")
-	for _, l := range lights {
-		light := ll.GetLight(l.Id)
-		if struct_mode {
-			fmt.Println(l.Id)
-			print_light_state(light.State)
-		} else {
-			print_light(light)
+	if config_filename != "" {
+		k := key.New(config_filename)
+		portal := portal.GetPortal()
+		ll := lights.NewLights(portal[0].InternalIpAddress, k.Username)
+		lights := ll.GetAllLights()
+		fmt.Println("All Lights: ")
+		for _, l := range lights {
+			light := ll.GetLight(l.Id)
+				print_light(light)
 		}
+	} else {
+		usage()
 	}
 }
