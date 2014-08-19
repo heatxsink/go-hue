@@ -5,7 +5,7 @@ import (
 	"log"
 	"fmt"
 	"encoding/json"
-	"../util"
+	"github.com/heatxsink/go-hue/src/util"
 )
 
 var (
