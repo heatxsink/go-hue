@@ -128,7 +128,7 @@ func TestSetGroupState(t *testing.T) {
 	portal := portal.GetPortal()
 	hostname := portal[0].InternalIpAddress
 	gg := NewGroup(hostname, username_api_key)
-	_test_groups := []int { 1 }
+	_test_groups := []int { 3 }
 	groups_before := make([]GroupState, len(_test_groups))
 	// save current state.
 	fmt.Println("\n\nBACKING UP original state ...")
@@ -138,11 +138,11 @@ func TestSetGroupState(t *testing.T) {
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
 	time.Sleep(time.Second * time.Duration(sleep_seconds))
-	// lets turn them red!
-	fmt.Println("\n\nRED ...")
-	red := lights.State { On: true, Hue: 65527, Effect: "none", Bri: 13, Sat: 253, Ct: 500, Xy: []float32{0.6736, 0.3221}, Alert: "none", TransitionTime: transition_time }
+	// lets turn them virgin america!
+	fmt.Println("\n\nVirgin America ...")
+	virgin_america := lights.State { On: true, Hue: 54179, Effect: "none", Bri: 230, Sat: 253, Ct: 223, Xy: []float32{0.3621, 0.1491}, Alert: "none", TransitionTime: transition_time }
 	for _, group_id := range _test_groups {
-		r := gg.SetGroupState(group_id, red)
+		r := gg.SetGroupState(group_id, virgin_america)
 		fmt.Println(r)
 		time.Sleep(time.Millisecond * time.Duration(sleep_ms))
 	}
@@ -191,6 +191,7 @@ func TestSetGroupState(t *testing.T) {
 
 	// lets RESTORE
 	fmt.Println("\n\nRESTORING original state ...")
+	time.Sleep(time.Second * time.Duration(sleep_seconds))
 	for _, gggg := range groups_before {
 		if gggg.Id == 0 {
 			continue

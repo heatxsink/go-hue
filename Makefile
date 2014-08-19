@@ -1,7 +1,7 @@
 GOROOT ?= /usr/local/go
 GOBIN ?= go
 GOPATH = $(shell pwd)/lib
-GODEPS = github.com/golang/glog
+GODEPS = 
 HUE_SRC = src
 HUE_VERSION ?= 1.2.0
 HUE_INSTALL ?= /usr/local/go-hue
