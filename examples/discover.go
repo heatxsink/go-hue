@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"../src/portal"
-	"../src/configuration"
+	"github.com/heatxsink/go-hue/src/portal"
+	"github.com/heatxsink/go-hue/src/configuration"
 )
 
 func main() {

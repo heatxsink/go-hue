@@ -4,9 +4,9 @@ import (
 	"os"
 	"flag"
 	"fmt"
-	"../src/portal"
-	"../src/lights"
-	"../src/key"
+	"github.com/heatxsink/go-hue/src/portal"
+	"github.com/heatxsink/go-hue/src/lights"
+	"github.com/heatxsink/go-hue/src/key"
 )
 
 var (
