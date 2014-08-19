@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	username_api_key_filename = "../../conf/username_api_key.conf"
+	username_api_key_filename = "../../conf/example.conf"
 	username_api_key = ""
 )
 

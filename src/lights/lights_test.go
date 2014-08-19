@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	username_api_key_filename = "../../conf/username_api_key.conf"
+	username_api_key_filename = "../../conf/example.conf"
 	username_api_key = ""
 	transition_time = uint16(4)
 	sleep_seconds = 4
