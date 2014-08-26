@@ -4,7 +4,7 @@ Wrapper API and cli examples in golang for interacting with lights via philips h
 
 demo
 ----
-<iframe width="560" height="315" src="//www.youtube.com/embed/3zMky_9xdJs?list=UUpU45CTPKyJofg5eGw7Q1OA" frameborder="0" allowfullscreen></iframe>
+[![Alt Demo of go-hue unit tests](http://img.youtube.com/vi/3zMky_9xdJs/0.jpg)](http://www.youtube.com/watch?v=3zMky_9xdJs)
 
 setup
 -----
