@@ -1,6 +1,6 @@
 go-hue
 ======
-Wrapper API and cli examples in golang for interacting with lights via philips hue hub HTTP API. I'm officially using this daily. More documentation to come shortly.
+Wrapper API and cli examples in golang for interacting with lights via philips hue hub HTTP API.
 
 demo
 ----
@@ -8,8 +8,15 @@ demo
 
 setup
 -----
-To run the examples you'll need golang and the "github.com/heatxsink/go-hue" module.
-
 To install "github.com/heatxsink/go-hue" golang module.
 
-	$ go get github.com/heatxsink/go-hue/src
+	$ go get github.com/heatxsink/go-hue
+
+To run the tests you'll need to set the following environment variables:
+
+	1. HUE_TEST_USERNAME (You can obtain a whitelisted username via examples/discover.go)
+	1. HUE_TEST_HOSTNAME (Your hue hub's hostname or IP address)
+
+bugs and contribution
+---------------------
+Please feel free to reach out. Issues and PR's are always welcome!
