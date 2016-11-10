@@ -1,59 +1,78 @@
 package main
 
 import (
-	"os"
 	"flag"
 	"fmt"
-	"github.com/heatxsink/go-hue/src/portal"
-	"github.com/heatxsink/go-hue/src/lights"
-	"github.com/heatxsink/go-hue/src/key"
+	"github.com/heatxsink/go-hue/groups"
+	"github.com/heatxsink/go-hue/lights"
+	"github.com/heatxsink/go-hue/portal"
+	"os"
+	"time"
 )
 
 var (
-	config_filename string = ""
+	apiKey     string = ""
+	blinkState lights.State
 )
 
-func print_light(light lights.Light) {
-	fmt.Println("\tLight: ")
-	fmt.Println("\t\tId:           ", light.Id)
-	fmt.Println("\t\tName:         ", light.Name)
-	fmt.Println("\t\tType:         ", light.Type)
-	fmt.Println("\t\tModelId:      ", light.ModelId)
-	fmt.Println("\t\tSwVersion:    ", light.SwVersion)
-	fmt.Println("\t\tState:")
-	fmt.Println("\t\t\tOn:         ", light.State.On)
-	fmt.Println("\t\t\tHue:        ", light.State.Hue)
-	fmt.Println("\t\t\tEffect:     ", light.State.Effect)
-	fmt.Println("\t\t\tBri:        ", light.State.Bri)
-	fmt.Println("\t\t\tSat:        ", light.State.Sat)
-	fmt.Println("\t\t\tCt:         ", light.State.Ct)
-	fmt.Println("\t\t\tXy:         ", light.State.Xy)
-	fmt.Println("\t\t\tReachable:  ", light.State.Reachable)
-	fmt.Println("\t\t\tColorMode:  ", light.State.ColorMode)
-}
-
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: get-light-state -config=[string]\n")
+	fmt.Fprintf(os.Stderr, "usage: get-light-state -key=[string]\n")
 	flag.PrintDefaults()
 	os.Exit(2)
 }
 
 func init() {
-	flag.StringVar(&config_filename, "config", "", "Config filename.")
+	blinkState = lights.State{On: true, Alert: "lselect"}
+	flag.StringVar(&apiKey, "key", os.Getenv("HUE_USERNAME"), "hue light api key")
 	flag.Parse()
 	flag.Usage = usage
 }
 
 func main() {
-	if config_filename != "" {
-		k := key.New(config_filename)
-		portal := portal.GetPortal()
-		ll := lights.NewLights(portal[0].InternalIpAddress, k.Username)
-		lights := ll.GetAllLights()
-		fmt.Println("All Lights: ")
-		for _, l := range lights {
-			light := ll.GetLight(l.Id)
-				print_light(light)
+	if apiKey != "" {
+		pp, err := portal.GetPortal()
+		if err != nil {
+			fmt.Println("portal.GetPortal() ERROR: ", err)
+			os.Exit(1)
+		}
+		ll := lights.New(pp[0].InternalIPAddress, apiKey)
+		allLights, err := ll.GetAllLights()
+		if err != nil {
+			fmt.Println("lights.GetAllLights() ERROR: ", err)
+			os.Exit(1)
+		}
+		fmt.Println()
+		fmt.Println("Lights")
+		fmt.Println("------")
+		for _, l := range allLights {
+			fmt.Printf("ID: %d Name: %s\n", l.ID, l.Name)
+		}
+		gg := groups.New(pp[0].InternalIPAddress, apiKey)
+		allGroups, err := gg.GetAllGroups()
+		if err != nil {
+			fmt.Println("groups.GetAllGroups() ERROR: ", err)
+			os.Exit(1)
+		}
+		fmt.Println()
+		fmt.Println("Groups")
+		fmt.Println("------")
+		for _, g := range allGroups {
+			fmt.Printf("ID: %d Name: %s\n", g.ID, g.Name)
+			for _, lll := range g.Lights {
+				fmt.Println("\t", lll)
+			}
+			previousState := g.Action
+			_, err := gg.SetGroupState(g.ID, blinkState)
+			if err != nil {
+				fmt.Println("groups.SetGroupState() ERROR: ", err)
+				os.Exit(1)
+			}
+			time.Sleep(time.Second * time.Duration(10))
+			_, err = gg.SetGroupState(g.ID, previousState)
+			if err != nil {
+				fmt.Println("groups.SetGroupState() ERROR: ", err)
+				os.Exit(1)
+			}
 		}
 	} else {
 		usage()

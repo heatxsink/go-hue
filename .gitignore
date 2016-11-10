@@ -10,6 +10,7 @@ _test
 lib
 bin
 log
+vendor
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -24,6 +25,3 @@ _cgo_export.*
 _testmain.go
 
 *.exe
-
-conf/username_api_key.conf
-conf/hued_web.conf
