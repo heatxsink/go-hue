@@ -1,4 +1,4 @@
-package lights
+package sensors
 
 import (
 	"bytes"
@@ -12,49 +12,51 @@ import (
 )
 
 var (
-	getAllLightsURL  = "http://%s/api/%s/lights"
-	getLightURL      = "http://%s/api/%s/lights/%d"
-	setLightStateURL = "http://%s/api/%s/lights/%d/state"
+	getAllSensorsURL = "http://%s/api/%s/sensors"
+	getSensorURL = "http://%s/api/%s/sensors/%d"
+	setSensorStateURL = "http://%s/api/%s/sensors/%d/state"
 )
 
-type Lights struct {
+type Sensors struct {
 	Hostname string
 	Username string
 }
 
-type Light struct {
-	ID        int    `json:"id,omitempty"`
-	Name      string `json:"name"`
-	State     State  `json:"state,omitempty"`
-	Type      string `json:"type,omitempty"`
-	ModelID   string `json:"modelid,omitempty"`
-	SWVersion string `json:"swversion,omitempty"`
+type Sensor struct {
+	ID               int    `json:"id,omitempty"`
+	Name             string `json:"name"`
+	State            State  `json:"state,omitempty"`
+	Config           Config `json:"config,omitempty"`
+	Type             string `json:"type,omitempty"`
+	ModelID          string `json:"modelid,omitempty"`
+	SWVersion        string `json:"swversion,omitempty"`
+	ManufacturerName string `json:"manufacturername,omitempty"`
+}
+
+type Config struct {
+	On            bool      `json:"on"`
+	Long          string    `json:"long,omitempty"`
+	Lat           string    `json:"lat,omitempty"`
+	SunriseOffset int16    `json:"sunriseoffset,omitempty"`
+	SunsetOffset  int16    `json:"sunsetoffset,omitempty"`
 }
 
 type State struct {
-	On             bool      `json:"on"`
-	Hue            uint16    `json:"hue,omitempty"`
-	Effect         string    `json:"effect,omitempty"`
-	Bri            uint8     `json:"bri,omitempty"`
-	Sat            uint8     `json:"sat,omitempty"`
-	CT             uint16    `json:"ct,omitempty"`
-	XY             []float32 `json:"xy,omitempty"`
-	Alert          string    `json:"alert,omitempty"`
-	TransitionTime uint16    `json:"transitiontime,omitempty"`
-	Reachable      bool      `json:"reachable,omitempty"`
-	ColorMode      string    `json:"colormode,omitempty"`
+	Daylight       bool      `json:"daylight,omitempty"`
+	LastUpdated    string    `json:"lastupdated,omitempty"`
+	ButtonEvent    int16    `json:"buttonevent,omitempty"`
 }
 
-func New(hostname string, username string) *Lights {
-	return &Lights{
+func New(hostname string, username string) *Sensors {
+	return &Sensors{
 		Hostname: hostname,
 		Username: username,
 	}
 }
 
-func (l *Lights) GetLight(lightID int) (Light, error) {
-	var ll Light
-	url := fmt.Sprintf(getLightURL, l.Hostname, l.Username, lightID)
+func (l *Sensors) GetSensor(lightID int) (Sensor, error) {
+	var ll Sensor
+	url := fmt.Sprintf(getSensorURL, l.Hostname, l.Username, lightID)
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return ll, err
@@ -77,8 +79,8 @@ func (l *Lights) GetLight(lightID int) (Light, error) {
 	return ll, err
 }
 
-func (l *Lights) RenameLight(lightID int, lightName string) ([]hue.ApiResponse, error) {
-	url := fmt.Sprintf(getLightURL, l.Hostname, l.Username, lightID)
+func (l *Sensors) RenameSensor(lightID int, lightName string) ([]hue.ApiResponse, error) {
+	url := fmt.Sprintf(getSensorURL, l.Hostname, l.Username, lightID)
 	data := fmt.Sprintf("{\"name\": \"%s\"}", lightName)
 	post_body := strings.NewReader(data)
 	request, err := http.NewRequest("PUT", url, post_body)
@@ -104,8 +106,8 @@ func (l *Lights) RenameLight(lightID int, lightName string) ([]hue.ApiResponse, 
 	return apiResponse, err
 }
 
-func (l *Lights) SetLightState(lightID int, state State) ([]hue.ApiResponse, error) {
-	url := fmt.Sprintf(setLightStateURL, l.Hostname, l.Username, lightID)
+func (l *Sensors) SetSensorState(sensorID int, state State) ([]hue.ApiResponse, error) {
+	url := fmt.Sprintf(setSensorStateURL, l.Hostname, l.Username, sensorID)
 	stateJSON, err := json.Marshal(&state)
 	if err != nil {
 		return nil, err
@@ -134,8 +136,8 @@ func (l *Lights) SetLightState(lightID int, state State) ([]hue.ApiResponse, err
 	return apiResponse, err
 }
 
-func (l *Lights) GetAllLights() ([]Light, error) {
-	url := fmt.Sprintf(getAllLightsURL, l.Hostname, l.Username)
+func (l *Sensors) GetAllSensors() ([]Sensor, error) {
+	url := fmt.Sprintf(getAllSensorsURL, l.Hostname, l.Username)
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -150,45 +152,35 @@ func (l *Lights) GetAllLights() ([]Light, error) {
 	if err != nil {
 		return nil, err
 	}
-	lightsMap := map[string]Light{}
-	err = json.Unmarshal(contents, &lightsMap)
+	sensorsMap := map[string]Sensor{}
+	err = json.Unmarshal(contents, &sensorsMap)
 	if err != nil {
 		return nil, err
 	}
-	lights := make([]Light, 0, len(lightsMap))
-	for lightID, light := range lightsMap {
+	lights := make([]Sensor, 0, len(sensorsMap))
+	for lightID, light := range sensorsMap {
 		light.ID, _ = strconv.Atoi(lightID)
 		lights = append(lights, light)
 	}
 	return lights, err
 }
 
-func (l *Light) String() string {
+func (l *Sensor) String() string {
 	var buffer bytes.Buffer
 	buffer.WriteString(fmt.Sprintf("Id:              %d\n", l.ID))
 	buffer.WriteString(fmt.Sprintf("Name:            %s\n", l.Name))
 	buffer.WriteString(fmt.Sprintf("Type:            %s\n", l.Type))
 	buffer.WriteString(fmt.Sprintf("ModelId:         %s\n", l.ModelID))
 	buffer.WriteString(fmt.Sprintf("SwVersion:       %s\n", l.SWVersion))
-	buffer.WriteString(fmt.Sprintf("State:\n"))
+	buffer.WriteString(fmt.Sprint("State:\n"))
 	buffer.WriteString(l.State.String())
 	return buffer.String()
 }
 
 func (s *State) String() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(fmt.Sprintf("On:              %t\n", s.On))
-	buffer.WriteString(fmt.Sprintf("Hue:             %d\n", s.Hue))
-	buffer.WriteString(fmt.Sprintf("Effect:          %s\n", s.Effect))
-	buffer.WriteString(fmt.Sprintf("Bri:             %d\n", s.Bri))
-	buffer.WriteString(fmt.Sprintf("Sat:             %d\n", s.Sat))
-	buffer.WriteString(fmt.Sprintf("CT:              %d\n", s.CT))
-	if len(s.XY) > 0 {
-		buffer.WriteString(fmt.Sprintf("XY:              %g, %g\n", s.XY[0], s.XY[1]))
-	}
-	buffer.WriteString(fmt.Sprintf("Alert:           %s\n", s.Alert))
-	buffer.WriteString(fmt.Sprintf("TransitionTime:  %d\n", s.TransitionTime))
-	buffer.WriteString(fmt.Sprintf("Reachable:       %t\n", s.Reachable))
-	buffer.WriteString(fmt.Sprintf("ColorMode:       %s\n", s.ColorMode))
+	buffer.WriteString(fmt.Sprintf("ButtonEvent:     %d\n", s.ButtonEvent))
+	buffer.WriteString(fmt.Sprintf("Daylight:        %t\n", s.Daylight))
+	buffer.WriteString(fmt.Sprintf("LastUpdated:        %s\n", s.LastUpdated))
 	return buffer.String()
 }
