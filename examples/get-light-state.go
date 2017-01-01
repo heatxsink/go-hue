@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/heatxsink/go-hue/groups"
-	"github.com/heatxsink/go-hue/lights"
-	"github.com/heatxsink/go-hue/portal"
+	"github.com/cpo/go-hue/groups"
+	"github.com/cpo/go-hue/lights"
+	"github.com/cpo/go-hue/portal"
 	"os"
 	"time"
 )
