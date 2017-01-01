@@ -8,9 +8,9 @@ demo
 
 setup
 -----
-To install "github.com/cpo/go-hue" golang module.
+To install "github.com/heatxsink/go-hue" golang module.
 
-	$ go get github.com/cpo/go-hue
+	$ go get github.com/heatxsink/go-hue
 
 To run the tests you'll need to set the following environment variables:
 

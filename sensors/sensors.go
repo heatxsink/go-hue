@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/cpo/go-hue/hue"
+	"github.com/heatxsink/go-hue/hue"
 	"io/ioutil"
 	"net/http"
 	"strconv"
