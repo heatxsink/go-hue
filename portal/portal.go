@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	portalURL = "http://www.meethue.com/api/nupnp"
+	portalURL = "https://discovery.meethue.com/"
 )
 
 type Portal struct {
