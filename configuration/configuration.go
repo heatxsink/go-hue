@@ -23,33 +23,33 @@ type User struct {
 }
 
 type SWUpdate struct {
-	UpdateState int    `json:updatestate`
-	URL         string `json:url`
-	Text        string `json:text`
-	Notify      bool   `json:notify`
+	UpdateState int    `json:"updatestate"`
+	URL         string `json:"url"`
+	Text        string `json:"text"`
+	Notify      bool   `json:"notify"`
 }
 
 type Whitelist struct {
 	LastUseDate string `json:"last use date"`
 	CreateDate  string `json:"create date"`
-	Name        string `json:name`
+	Name        string `json:"name"`
 }
 
 type Configuration struct {
 	Hostname     string               `json:"go_hue_hostname,omitempty"`
-	ProxyPort    int                  `json:proxyport`
-	UTC          string               `json:utc`
-	Name         string               `json:name`
-	SWUpdate     SWUpdate             `json:swupdate`
-	Whitelist    map[string]Whitelist `json:whitelist`
-	SWVersion    string               `json:swversion`
-	ProxyAddress string               `json:proxyaddress`
-	Mac          string               `json:mac`
-	LinkButton   bool                 `json:linkbutton`
-	IPAddress    string               `json:ipaddress`
-	NetMask      string               `json:netmask`
-	Gateway      string               `json:gateway`
-	DHCP         bool                 `json:dhcp`
+	ProxyPort    int                  `json:"proxyport"`
+	UTC          string               `json:"utc"`
+	Name         string               `json:"name"`
+	SWUpdate     SWUpdate             `json:"swupdate"`
+	Whitelist    map[string]Whitelist `json:"whitelist"`
+	SWVersion    string               `json:"swversion"`
+	ProxyAddress string               `json:"proxyaddress"`
+	Mac          string               `json:"mac"`
+	LinkButton   bool                 `json:"linkbutton"`
+	IPAddress    string               `json:"ipaddress"`
+	NetMask      string               `json:"netmask"`
+	Gateway      string               `json:"gateway"`
+	DHCP         bool                 `json:"dhcp"`
 }
 
 func New(hostname string) *Configuration {
